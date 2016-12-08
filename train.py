@@ -1,4 +1,5 @@
 # coding: utf-8
+import argparse
 import pandas as pd
 import numpy as np
 
@@ -12,10 +13,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.decomposition import PCA
 from sklearn.metrics import r2_score
-
-n_components = 200
-nb_epoch = 1
-batch_size = 128
 
 seed = 42
 np.random.seed(seed)
@@ -89,16 +86,33 @@ def train_and_eval(df):
 
 if __name__ == "__main__":
 	
+	parser = argparse.ArgumentParser(description='Description of your program')
+	parser.add_argument('-i','--input', help='Input file', required=True)
+	parser.add_argument('-e','--epochs', help='Number of epochs', type=int, default=200)
+	parser.add_argument('-c','--components', help='Number of components', type=int, default=200)
+	parser.add_argument('-b','--batch_size', help='Batch size', type=int, default=128)
+	parser.add_argument('-m','--model_file_output', help='Model file output', default='wh.h5')
+	parser.add_argument('-p','--pca', help='PCA file', default='pca.pkl')
+	parser.add_argument('-s','--scaler', help='Scaler file', default='scl.pkl')
+	parser.add_argument('-me','--mean_file', help='Mean file output', default='mean.csv')
+	parser.add_argument('-g','--net_graph', help='Net file output', default='wh.png')
+
+	args = vars(parser.parse_args())
+	
+	n_components = args['components']
+	nb_epoch = args['epochs']
+	batch_size = args['batch_size']
+
+
 	print("Components {}".format(n_components))
 	print("Epochs {}".format(nb_epoch))
 	print("------------------------------------------------------")
 	
-	df = pd.read_csv('train.csv', index_col=None)
+	df = pd.read_csv(args['input'], index_col=None)
 	sc, pca, mean, model = train_and_eval(df)
 
-	plot(model, to_file='wh.png')
-
-	pd.DataFrame(mean).T.to_csv('mean.csv', index=None)
-	joblib.dump(sc, 'sc.pkl') 
-	joblib.dump(pca, 'pca.pkl')
-	model.save('wh.h5')
+	plot(model, to_file=args['net_graph'])
+	pd.DataFrame(mean).T.to_csv(args['mean_file'], index=None)
+	joblib.dump(sc, args['scaler']) 
+	joblib.dump(pca, args['pca'])
+	model.save(args['model_file_output'])

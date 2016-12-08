@@ -1,3 +1,6 @@
-*.txt
+wh.png
+*.pkl
+*.skl
+*.h5
 *.ipynb
 *.csv
