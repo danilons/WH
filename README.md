@@ -6,14 +6,27 @@ Necessary modules might be installed with pip
 pip install -r requirements.txt
 ```
 
-# Training
+# Setup
 
-In order to train the model
+There is a pretrained model available. It can be downloaded as:
 ```
-python train.py
+./download_models.sh
 ```
 
 # Testing
 
 To test the trained model it is necessary to provide a csv with the same features x001 to x304.
 The output will be a new csv in a file named **predicted.csv** with a new column y at the end.
+```
+python test.py -i $dataset 
+```
+
+# Training
+
+In order to train the model on a new dataset
+```
+python train.py -i $dataset
+```
+Some configuration as the number of principal components can be changed.
+
+
