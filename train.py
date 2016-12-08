@@ -46,6 +46,7 @@ def preprocess(df):
 	y_train = dataset[:, 304].tolist()
 
 	pca.fit(X_train)
+        print(u"Explained variance {:.4f}%".format(100 * pca.explained_variance_ratio_.sum()))
 	sc.fit(pca.transform(X_train))
 
 	for column in df_test.columns[:304]:
